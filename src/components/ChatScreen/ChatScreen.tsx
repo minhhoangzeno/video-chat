@@ -1,40 +1,36 @@
-import React, { useContext, useState } from "react";
-import "./index.css";
+import { useContext, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  GetChatList,
+  UpdateChatList,
+} from "../../app/reducers/Chat/ChatList.reducer";
+import { GetMessageList } from "../../app/reducers/Message/MessageList.reducer";
+import { AppContext } from "../../context/AppContext";
+import { ISubtitle } from "../../interface/Subtitle.interface";
 import ChatMessage from "../ChatMessage/ChatMessage";
-import sendIcon from "../../icons/paper-plane.png";
-import emojiIcon from "../../icons/face-smile.png";
-import { v4 as uuid } from "uuid";
-import { AppContext } from "../../App";
+import sendIcon from "../../assets/icons/paper-plane.png";
+import emojiIcon from "../../assets/icons/face-smile.png";
+import "./index.css";
 const ChatScreen = () => {
   //States
-  const [chatInput, setChatInput] = useState("");
-
-  const { messageList, setMessageList, playBip, lastMessageRef } =
-    useContext(AppContext);
-
-  const chatInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setChatInput(event.target.value);
-  };
-  const sendMessage = (self:boolean) => {
-    let tmpMessageList = [...messageList];
-    tmpMessageList.push({ msgId: uuid(), text: chatInput, self: self });
-    setChatInput("");
-    setMessageList(tmpMessageList);
-    playBip();
-  };
+  const chatList = useAppSelector(GetChatList);
+  const messageList = useAppSelector(GetMessageList);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(UpdateChatList(messageList));
+  }, [messageList, dispatch]);
+  const { lastMessageRef } = useContext(AppContext);
   return (
     <div className="chatScreen">
       <div className="chatMessages">
-        {messageList.map((message:any, index:number) => {
+        {chatList.map((message: ISubtitle, index: number) => {
           return (
             <ChatMessage
               text={message.text}
-              key={message.msgId}
-              msgId={message.msgId}
-              left={message.self !== true}
-              componentRef={
-                index === messageList.length - 1 ? lastMessageRef : ""
-              }
+              key={index}
+              msgId={message.id}
+              left={message.author.title !== "Bạn"}
+              componentRef={index === chatList.length - 1 ? lastMessageRef : ""}
             />
           );
         })}
@@ -43,16 +39,9 @@ const ChatScreen = () => {
       <div className="chatBar">
         <div className="chatInput">
           <img className="emojiIcon" src={emojiIcon} alt="emoji" />
-          <textarea
-            className="chatBox"
-            value={chatInput}
-            onChange={chatInputChange}
-          />
+          <textarea className="chatBox" />
         </div>
-        <div className="sendBtn" onClick={()=>sendMessage(true)}>
-          <img className="sendIcon" src={sendIcon} alt="send" />
-        </div>
-        <div className="sendBtn" onClick={()=>sendMessage(false)}>
+        <div className="sendBtn">
           <img className="sendIcon" src={sendIcon} alt="send" />
         </div>
       </div>

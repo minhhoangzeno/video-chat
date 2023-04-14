@@ -11,7 +11,7 @@
   height: 8vh;
   display: flex;
 
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
 }
 .appBarRight {
@@ -19,7 +19,7 @@
   height: 8vh;
   display: flex;
 
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
 }
 

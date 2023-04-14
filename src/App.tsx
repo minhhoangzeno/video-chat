@@ -1,40 +1,47 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Upload } from "antd";
-import { createContext, useEffect, useRef, useState } from "react";
+import { Col, Row } from "antd";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
+import { useAppSelector } from "./app/hooks";
+import { GetAuthorConversation } from "./app/reducers/Author/AuthorConversation.reducer";
+import { GetChatList } from "./app/reducers/Chat/ChatList.reducer";
 import AppBar from "./components/AppBar/AppBar";
+import Author from "./components/Author/Author";
 import ChatScreen from "./components/ChatScreen/ChatScreen";
 import ImportFile from "./components/ImportFile/ImportFile";
 import Loading from "./components/Loading/Loading";
-import Menu from "./components/Menu/Menu";
-import clock from "./images/clock.png";
-import phoneStatus from "./images/phoneHeader.png";
+import MessageList from "./components/MessageList";
+import { AppContext } from "./context/AppContext";
+import { IAuthor } from "./interface/Author.interface";
 const bipSound = require("./images/messageSend.mp3");
 
-interface IValueContext {
-  messageList: any;
-  setMessageList: (el: any) => void;
-  playBip: () => void;
-  isMenuOpen: boolean;
-  setShowLoading: (el: boolean) => void;
-  setLoadPercent: (el: number) => void;
-  appRef: any;
-  setIsMenuOpen: (el: boolean) => void;
-  loadPercent: number;
-  lastMessageRef: any;
-  setShowHelp: (el: boolean) => void;
-}
-export const AppContext = createContext({} as IValueContext);
+// interface IValueContext {
+//   messageList: any;
+//   setMessageList: (el: any) => void;
+//   playBip: () => void;
+//   isMenuOpen: boolean;
+//   setShowLoading: (el: boolean) => void;
+//   setLoadPercent: (el: number) => void;
+//   appRef: any;
+//   setIsMenuOpen: (el: boolean) => void;
+//   loadPercent: number;
+//   lastMessageRef: any;
+//   setShowHelp: (el: boolean) => void;
+//   messageChats: ISubtitle[];
+//   setMessageChats: (el: any) => void;
+// }
+// export const AppContext = createContext({} as IValueContext);
 function App() {
-  const appRef = useRef<null | HTMLDivElement>();
+  const appRef = useRef<any>();
   const lastMessageRef = useRef<null | HTMLDivElement>();
 
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [messageList, setMessageList] = useState<string[]>([]);
+  const authorConservation = useAppSelector(GetAuthorConversation);
+  // const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  // const [messageList, setMessageList] = useState<string[]>([]);
+  // const [messageChats, setMessageChats] = useState<ISubtitle[]>([]);
   const [showLoading, setShowLoading] = useState<boolean>(false);
   const [loadPercent, setLoadPercent] = useState<number>(0);
-  const [showHelp, setShowHelp] = useState<boolean>(false);
-
+  // const [showHelp, setShowHelp] = useState<boolean>(false);
+  const chatList = useAppSelector(GetChatList);
   const playBip = () => {
     const audio = new Audio(bipSound);
     audio.volume = 0.7;
@@ -45,46 +52,47 @@ function App() {
 
   useEffect(() => {
     lastMessageRef?.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messageList]);
+  }, [chatList]);
 
   return (
     <>
-      <Row>
-        <Col span={12}>
-          <ImportFile />
-        </Col>
+      <AppContext.Provider
+        value={{
+          playBip,
+          setShowLoading,
+          setLoadPercent,
+          appRef,
+          loadPercent,
+          lastMessageRef,
+        }}
+      >
+        <Row className="p-4">
+          <Col span={16}>
+            <Row className="justify-between mb-6 pr-4">
+              {authorConservation.map((el: IAuthor, index: number) => {
+                return <Author key={index} author={el} />;
+              })}
+            </Row>
+            <Row>
+              <ImportFile />
+            </Row>
+            <Row className="pr-4">
+              <MessageList />
+            </Row>
+          </Col>
 
-        <Col span={12}>
-          <AppContext.Provider
-            value={{
-              messageList,
-              setMessageList,
-              playBip,
-              isMenuOpen,
-              setShowLoading,
-              setLoadPercent,
-              appRef,
-              setIsMenuOpen,
-              loadPercent,
-              lastMessageRef,
-              setShowHelp,
-            }}
-          >
+          <Col span={8}>
             <div className="conntainer">
               {showLoading ? <Loading /> : <></>}
-              <Menu />
-              <div>
-                <div className="statusBar">
-                  <img src={clock} alt="clock" />
-                  <img id="phoneStatus" src={phoneStatus} alt="phone status" />
-                </div>
+            
+              <div ref={appRef}>
                 <AppBar />
                 <ChatScreen />
               </div>
             </div>
-          </AppContext.Provider>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </AppContext.Provider>
     </>
   );
 }

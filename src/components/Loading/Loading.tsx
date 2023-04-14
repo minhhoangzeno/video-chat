@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { AppContext } from "../../App";
+import { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
 import "./index.css";
 const Loading = () => {
   const { loadPercent } = useContext(AppContext);

@@ -1,0 +1,9 @@
+.editTableRow .ant-form-item-explain {
+  position: absolute;
+  top: 100%;
+  font-size: 12px;
+}
+
+.optionAuthor{
+  height:40px;
+}

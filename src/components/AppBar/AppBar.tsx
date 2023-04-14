@@ -1,28 +1,13 @@
-import React, { useContext, useState } from "react";
-import { AppContext } from "../../App";
-import videoIcon from "../../icons/video.png";
-import callIcon from "../../icons/phone.png";
-import menuIcon from "../../icons/ellipsis-vertical.png";
+import { useAppSelector } from "../../app/hooks";
+import { GetAuthorConversation } from "../../app/reducers/Author/AuthorConversation.reducer";
+import callIcon from "../../assets/icons/phone.png";
+import videoIcon from "../../assets/icons/video.png";
 import defaultPP from "../../images/avatar.png";
 import "./index.css";
 const AppBar = () => {
-  const { isMenuOpen, setIsMenuOpen } = useContext(AppContext);
-  const [pp, setPp] = useState(defaultPP);
-  const [nickname, setNickname] = useState("Nickname");
-  const nicknameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(event.target.value);
-  };
-
-  const menuClick = async (event: React.MouseEvent<HTMLElement>) => {
-    console.log(isMenuOpen);
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const avatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setPp(URL.createObjectURL(event.target.files[0]));
-    }
-  };
+  const authorConservation = useAppSelector(GetAuthorConversation);
+  let authorFriend = authorConservation.filter((el) => el.title === "Khách")[0];
+  
   return (
     <div className="appBar">
       <div className="appBarLeft">
@@ -38,31 +23,24 @@ const AppBar = () => {
         </svg>
         <div>
           <label htmlFor="pp" className="ppLabel">
-            <img src={pp} alt="ProfilePicture" className="ppImage" />
+            <img
+              src={authorFriend.avatar ? authorFriend.avatar : defaultPP}
+              alt="ProfilePicture"
+              className="ppImage"
+            />
           </label>
-          <input
-            id="pp"
-            type={"file"}
-            accept="image/*"
-            onChange={avatarChange}
-          />
         </div>
         <input
           className="nickname"
+          disabled
           type={"text"}
-          value={nickname}
-          onChange={nicknameChange}
+          value={authorFriend.name}
         />
       </div>
       <div className="appBarRight">
         <img className="appBarIcons" src={videoIcon} alt="video" />
         <img className="appBarIcons" src={callIcon} alt="call" />
-        <img
-          className={`appBarIcons ${isMenuOpen ? "open" : "close"}`}
-          src={menuIcon}
-          alt="video"
-          onClick={menuClick}
-        />
+        
       </div>
     </div>
   );
