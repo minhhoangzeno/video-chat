@@ -51,9 +51,11 @@ export const RecordVideoHelper = async (
   }
 };
 
-async function startRecording(duration: number,
+async function startRecording(
+  duration: number,
   stream: MediaStream,
-  streamAudio: MediaStream) {
+  streamAudio: MediaStream
+) {
   const streamRecord = new MediaStream([
     stream.getTracks()[0],
     ...streamAudio.getTracks(),

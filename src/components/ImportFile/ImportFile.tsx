@@ -12,6 +12,7 @@ import { GetAuthorConversation } from "../../app/reducers/Author/AuthorConversat
 import {
   AddChatElement,
   GetChatList,
+  PreviewChatMessage,
   UpdateChatList,
 } from "../../app/reducers/Chat/ChatList.reducer";
 import {
@@ -51,7 +52,7 @@ export default function ImportFile() {
   };
 
   const handleUpdateChatList = (el: ISubtitle) => {
-    dispatch(AddChatElement(el));
+    dispatch(PreviewChatMessage(el));
   };
 
   return (

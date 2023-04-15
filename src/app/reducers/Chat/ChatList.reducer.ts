@@ -16,9 +16,17 @@ const ChatListSlice = createSlice({
       state = [...state, action.payload];
       return state;
     },
+    PreviewChatMessage: (state, action: PayloadAction<ISubtitle>) => {
+      if (state.length > 3) {
+        state = [];
+      }
+      state = [...state, action.payload];
+      return state;
+    },
   },
 });
 
-export const { UpdateChatList, AddChatElement } = ChatListSlice.actions;
+export const { UpdateChatList, AddChatElement, PreviewChatMessage } =
+  ChatListSlice.actions;
 export const GetChatList = (state: RootState) => state.chatList;
 export default ChatListSlice.reducer;

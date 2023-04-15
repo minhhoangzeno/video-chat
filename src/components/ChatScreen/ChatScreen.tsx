@@ -17,17 +17,17 @@ const ChatScreen = () => {
 
   const messageList = useAppSelector(GetMessageList);
   const dispatch = useAppDispatch();
+  
   useEffect(() => {
     dispatch(UpdateChatList(messageList));
   }, [messageList, dispatch]);
-  useEffect(() => {
-    const offsetTop = document.getElementById("lastMessageRef")?.offsetTop;
-    if (chatRef.current && offsetTop) {
-     
-      
-      chatRef.current.scrollTo(0, offsetTop);
-    }
-  }, [chatList]);
+
+  // useEffect(() => {
+  //   const offsetTop = document.getElementById("lastMessageRef")?.offsetTop;
+  //   if (chatRef.current && offsetTop) {
+  //     chatRef.current.scrollTo(0, offsetTop);
+  //   }
+  // }, [chatList]);
 
   return (
     <div className="chatScreen">
