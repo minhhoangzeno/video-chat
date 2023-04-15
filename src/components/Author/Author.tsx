@@ -1,6 +1,17 @@
 import { CheckOutlined, CloseOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, message, Row } from "antd";
+import {
+  Avatar,
+  Button,
+  Col,
+  Form,
+  Input,
+  message,
+  Row,
+  Upload,
+  UploadProps,
+} from "antd";
 import FormItem from "antd/es/form/FormItem";
+import { RcFile } from "antd/es/upload";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../app/hooks";
@@ -66,15 +77,15 @@ export default function Author(props: IAuthorProps) {
   const onFinishFailed = () => {
     message.error("Error.").then((r) => console.log(r));
   };
-  const avatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
+  const avatarChange = (el: RcFile) => {
+    if (el) {
       setFormValue({
         ...formValue,
-        avatar: URL.createObjectURL(event.target.files[0]),
+        avatar: URL.createObjectURL(el),
       });
       form.setFieldsValue({
         ...form.getFieldsValue,
-        avatar: URL.createObjectURL(event.target.files[0]),
+        avatar: URL.createObjectURL(el),
       });
     }
   };
@@ -96,7 +107,7 @@ export default function Author(props: IAuthorProps) {
                 disabled={!isEditing}
                 prefix={
                   <>
-                    <div className="cursor-pointer">
+                    {/* <div className="cursor-pointer">
                       <label htmlFor="pp" className="ppLabel">
                         <img
                           src={formValue.avatar ? formValue.avatar : defaultPP}
@@ -112,7 +123,22 @@ export default function Author(props: IAuthorProps) {
                         accept="image/*"
                         onChange={avatarChange}
                       />
-                    </div>
+                    </div> */}
+                    <Upload
+                      className="cursor-pointer"
+                      beforeUpload={avatarChange}
+                      multiple={false}
+                      customRequest={(options) => {
+                        if (options.onSuccess) {
+                          options.onSuccess("ok");
+                        }
+                      }}
+                      showUploadList={false}
+                    >
+                      <Avatar
+                        src={formValue.avatar ? formValue.avatar : defaultPP}
+                      />
+                    </Upload>
                   </>
                 }
                 size="small"

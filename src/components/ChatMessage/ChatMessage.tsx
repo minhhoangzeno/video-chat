@@ -4,33 +4,13 @@ interface IChatMessageProps {
   left: any;
   text: any;
   msgId: any;
-  componentRef: any;
+  componentRef: string;
 }
-const ChatMessage = ({
-  left,
-  text,
-  msgId,
-  componentRef,
-}: IChatMessageProps) => {
-  
-  // const messageClick = (event: React.MouseEvent<HTMLElement>) => {
-  //   if (event.detail === 2) {
-  //     let tmpMessageList = messageList.map((message:any) => {
-  //       if (message.msgId === msgId) {
-  //         message.self = !message.self;
-  //       }
-  //       return message;
-  //     });
-  //     setMessageList(tmpMessageList);
-  //   }
-  // };
-  const refProp =
-    componentRef && componentRef !== "" ? { ref: componentRef } : {};
+const ChatMessage = ({ left, text, componentRef }: IChatMessageProps) => {
   return (
     <div
-      // onClick={messageClick}
       className={`message ${left && left === true ? "ml" : "mr"}`}
-      {...refProp}
+      id={componentRef}
     >
       {text}
     </div>

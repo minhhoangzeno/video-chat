@@ -4,5 +4,4 @@ export interface IValueAppContext {
   setLoadPercent: (el: number) => void;
   appRef: any;
   loadPercent: number;
-  lastMessageRef: any;
 }

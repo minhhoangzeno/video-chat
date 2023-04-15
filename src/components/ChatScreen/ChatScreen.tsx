@@ -1,28 +1,37 @@
-import { useContext, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   GetChatList,
   UpdateChatList,
 } from "../../app/reducers/Chat/ChatList.reducer";
 import { GetMessageList } from "../../app/reducers/Message/MessageList.reducer";
-import { AppContext } from "../../context/AppContext";
+import emojiIcon from "../../assets/icons/face-smile.png";
+import sendIcon from "../../assets/icons/paper-plane.png";
 import { ISubtitle } from "../../interface/Subtitle.interface";
 import ChatMessage from "../ChatMessage/ChatMessage";
-import sendIcon from "../../assets/icons/paper-plane.png";
-import emojiIcon from "../../assets/icons/face-smile.png";
 import "./index.css";
 const ChatScreen = () => {
   //States
   const chatList = useAppSelector(GetChatList);
+  const chatRef = useRef<HTMLDivElement>(null);
+
   const messageList = useAppSelector(GetMessageList);
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(UpdateChatList(messageList));
   }, [messageList, dispatch]);
-  const { lastMessageRef } = useContext(AppContext);
+  useEffect(() => {
+    const offsetTop = document.getElementById("lastMessageRef")?.offsetTop;
+    if (chatRef.current && offsetTop) {
+     
+      
+      chatRef.current.scrollTo(0, offsetTop);
+    }
+  }, [chatList]);
+
   return (
     <div className="chatScreen">
-      <div className="chatMessages">
+      <div className="chatMessages" ref={chatRef} id="chatMessages">
         {chatList.map((message: ISubtitle, index: number) => {
           return (
             <ChatMessage
@@ -30,7 +39,7 @@ const ChatScreen = () => {
               key={index}
               msgId={message.id}
               left={message.author.title !== "Bạn"}
-              componentRef={index === chatList.length - 1 ? lastMessageRef : ""}
+              componentRef={index === chatList.length - 1 ? "lastMessageRef" : ""}
             />
           );
         })}

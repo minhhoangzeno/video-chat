@@ -14,25 +14,9 @@ import { AppContext } from "./context/AppContext";
 import { IAuthor } from "./interface/Author.interface";
 const bipSound = require("./images/messageSend.mp3");
 
-// interface IValueContext {
-//   messageList: any;
-//   setMessageList: (el: any) => void;
-//   playBip: () => void;
-//   isMenuOpen: boolean;
-//   setShowLoading: (el: boolean) => void;
-//   setLoadPercent: (el: number) => void;
-//   appRef: any;
-//   setIsMenuOpen: (el: boolean) => void;
-//   loadPercent: number;
-//   lastMessageRef: any;
-//   setShowHelp: (el: boolean) => void;
-//   messageChats: ISubtitle[];
-//   setMessageChats: (el: any) => void;
-// }
-// export const AppContext = createContext({} as IValueContext);
 function App() {
-  const appRef = useRef<any>();
-  const lastMessageRef = useRef<null | HTMLDivElement>();
+  const appRef = useRef<HTMLDivElement>(null);
+  
 
   const authorConservation = useAppSelector(GetAuthorConversation);
   // const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -41,7 +25,7 @@ function App() {
   const [showLoading, setShowLoading] = useState<boolean>(false);
   const [loadPercent, setLoadPercent] = useState<number>(0);
   // const [showHelp, setShowHelp] = useState<boolean>(false);
-  const chatList = useAppSelector(GetChatList);
+  
   const playBip = () => {
     const audio = new Audio(bipSound);
     audio.volume = 0.7;
@@ -49,11 +33,7 @@ function App() {
       audio.play();
     });
   };
-
-  useEffect(() => {
-    lastMessageRef?.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatList]);
-
+  
   return (
     <>
       <AppContext.Provider
@@ -63,7 +43,7 @@ function App() {
           setLoadPercent,
           appRef,
           loadPercent,
-          lastMessageRef,
+         
         }}
       >
         <Row className="p-4">

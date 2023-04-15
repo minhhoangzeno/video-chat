@@ -63,7 +63,12 @@ export default function ImportFile() {
             options.onSuccess("ok");
           }
         }}
+        maxCount={1}
         beforeUpload={handleParseFile}
+        onRemove={() => {
+          dispatch(UpdateMessageList([]));
+          dispatch(UpdateChatList([]));
+        }}
       >
         <Button icon={<UploadOutlined />}>Upload file srt</Button>
       </Upload>
